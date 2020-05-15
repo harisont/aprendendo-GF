@@ -8,8 +8,8 @@ concrete HelloEng of Hello = {
   lin
     Hello recip = {s = "hello" ++ recip.s} ;
     Bye recip = {s = "bye" ++ recip.s} ;
-    GoodAfternoon recip = {s = "good afternoon" ++ recip.s} ;
     GoodEvening recip = {s = "good evening" ++ recip.s} ;
+    GoodNight recip = {s = "good night" ++ recip.s} ;
     World = {s = "world"} ;
     Mum = {s = "mum"} ;
     Dad = {s = "dad"} ;

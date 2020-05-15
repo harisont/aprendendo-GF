@@ -11,7 +11,7 @@ abstract Hello = {
   fun
     Hello : Recipient -> Greeting ;
     Bye : Recipient -> Greeting ;
-    GoodAfternoon : Recipient -> Greeting ;
     GoodEvening : Recipient -> Greeting ;
+    GoodNight : Recipient -> Greeting ;
     World, Mum, Dad, Friends : Recipient ;
 }
