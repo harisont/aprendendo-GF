@@ -10,7 +10,7 @@ abstract Food = {
     IsQ : Prefix -> Item -> Quality -> Phrase ;
     This, That : Kind -> Item ;
     QKind : Quality -> Kind -> Kind ;
-    Wine, Cheese, Fish, Bread, Beer, Sallad, Rice, IceCream, Soup : Kind ;
+    Wine, Cheese, Fish, Bread, Beer, Rice, IceCream : Kind ;
     Very : Quality -> Quality ;
     Fresh, Warm, Expensive, Cheap, Delicious, Disgusting, Boring : Quality ;
     Italian, German, Swedish : Quality ;

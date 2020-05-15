@@ -14,10 +14,8 @@ concrete FoodEng of Food = {
     Fish = {s = "fish"} ;
     Bread = {s = "bread"} ;
     Beer = {s = "beer"} ;
-    Sallad = {s = "sallad"} ;
     Rice = {s = "rice"} ;
     IceCream = {s = "ice cream"} ;
-    Soup = {s = "soup"} ;
     Very quality = {s = "very" ++ quality.s} ;
     Fresh = {s = "fresh"} ;
     Warm = {s = "warm"} ;
