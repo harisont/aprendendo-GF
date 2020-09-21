@@ -23,9 +23,12 @@
     
 name | purpose
 --- | ---
-`abstract` | AS
-`concrete` | CS
-`resource` | collection of `oper`s, i.e. library. 
+`abstract`            | AS
+`concrete`            | CS
+`resource`            | collection of `oper`s, i.e. library (type signatures & bodies together) 
+`interface`           | "AS" of a resource module
+`instance`            | "CS" of a resource module
+`incomplete concrete` | CS defined in terms of an interface. AKA functor AKA parametrized module. I don't really understand this but I'm pretty sure it's to abstract things that are common to a group of languages among those considered, e.g. romance.
 
 Opening a resource module in a CS module:
 
