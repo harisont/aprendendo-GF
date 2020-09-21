@@ -1,8 +1,10 @@
-concrete DrinkEng of Drink = {
-    lincat Kind = {s : Str} ;
+concrete DrinkEng of Drink = open FoodResEng in {
+
+    -- Kind is linearize as a 1-param table
+    lincat Kind = {s : Number => Str} ;
 
     lin
-        Wine = {s = "wine"} ;
-        Beer = {s = "beer"} ;
-        Lemonade = {s = "lemonade"};
+        Wine = regKind "wine" ;
+        Beer = regKind "beer" ;
+        Lemonade = regKind "lemonade" ;
 }

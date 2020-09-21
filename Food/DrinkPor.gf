@@ -1,8 +1,8 @@
-concrete DrinkPor of Drink = {
-    lincat Kind = {s : Str} ;
+concrete DrinkPor of Drink = open FoodResPor in {
+    lincat Kind = {s : Number => Str; g : Gender} ;
     
     lin
-        Wine = {s = "vinho"} ;
-        Beer = {s = "cerveja"} ;
-        Lemonade = {s = "limonada"};
+        Wine = regKind "vinho" ;
+        Beer = regKind "cerveja" ;
+        Lemonade = regKind "limonada" ; -- TODO: actually make use of Femm
 }

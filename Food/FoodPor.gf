@@ -1,4 +1,4 @@
-concrete FoodPor of Food = DrinkPor ** { -- extend DrinkPor
+concrete FoodPor of Food = DrinkPor ** open FoodResPor in { -- extend DrinkPor
   
   lincat
     Phrase, Item, Quality, Prefix = {s : Str} ;
@@ -6,14 +6,20 @@ concrete FoodPor of Food = DrinkPor ** { -- extend DrinkPor
   lin
     Is prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s} ;
     IsQ prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s ++ "?"} ;
-    This kind = {s = "este" ++ kind.s} ;
-    That kind = {s = "esse" ++ kind.s} ;
-    QKind quality kind = {s = kind.s ++ quality.s} ;
-    Cheese = {s = "queijo"} ;
-    Fish = {s = "peixe"} ;
-    Bread = {s = "pão"} ;
-    Rice = {s = "arroz"} ;
-    IceCream = {s = "gelato"} ;
+    -- only use singular masculine for the moment (TODO: allow plural + feminine)
+    This kind = {s = "este" ++ kind.s ! Sing} ;
+    That kind = {s = "esse" ++ kind.s ! Sing} ;
+    QKind quality kind = {
+      s = table {
+      _ => kind.s ! Sing ++ quality.s 
+      } ;
+      g = Masc
+    } ;
+    Cheese = regKind "queijo" ;
+    Fish = regKind "peixe" ; -- TODO: irregular (?) gender
+    Bread = regKind "pão" ;
+    Rice = regKind "arroz" ; -- TODO: irregular number
+    IceCream = regKind "gelato" ;
     Very quality = {s = "muito" ++ quality.s} ;
     Fresh = {s = "fresco"} ;
     Warm = {s = "quente"} ;

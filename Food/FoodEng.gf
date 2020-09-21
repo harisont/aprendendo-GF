@@ -1,20 +1,23 @@
-concrete FoodEng of Food = DrinkEng ** open StrOper in { -- extend DrinkEng
+concrete FoodEng of Food = DrinkEng ** open StrOper, FoodResEng in { -- extend DrinkEng
   -- examples of using opers defined in StrOper marked as --*
   
   lincat
-    Phrase, Item, Kind, Quality, Prefix = {s : Str} ;
+    Phrase, Item, Quality, Prefix = {s : Str} ;
   
   lin
     Is prefix item quality = {s = prefix.s ++ item.s ++ "is" ++ quality.s} ;
     IsQ prefix item quality = {s = prefix.s ++ "is" ++ item.s ++ quality.s ++ "?"} ;
-    This kind = {s = "this" ++ kind.s} ;
-    That kind = prefix "that" kind ; --* (or even prefix "that" thanks to partial application)
-    QKind quality kind = {s = quality.s ++ kind.s} ; --* or cc quality kind
-    Cheese = {s = "cheese"} ;
-    Fish = ss "fish" ; --*
-    Bread = {s = "bread"} ;
-    Rice = {s = "rice"} ;
-    IceCream = {s = "ice cream"} ;
+    -- only use singular for the moment (TODO: allow plural)
+    This kind = {s = "this" ++ kind.s ! Sing} ;
+    That kind = {s = "that" ++ kind.s ! Sing} ;
+    QKind quality kind = {s = table { 
+      _ => quality.s ++ kind.s ! Sing }
+    } ;
+    Cheese = regKind "cheese" ;
+    Fish = regKind "fish" ; -- TODO: irregular plural
+    Bread = regKind "bread" ;
+    Rice = regKind "rice" ;
+    IceCream = regKind "ice cream" ;
     Very quality = {s = "very" ++ quality.s} ;
     Fresh = {s = "fresh"} ;
     Warm = {s = "warm"} ;
