@@ -1,15 +1,14 @@
-concrete FoodPor of Food = {
+concrete FoodPor of Food = DrinkPor ** { -- extend DrinkPor
   
   lincat
-    Phrase, Item, Kind, Quality, Prefix = {s : Str} ;
+    Phrase, Item, Quality, Prefix = {s : Str} ;
   
   lin
     Is prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s} ;
-    IsQ prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s} ;
+    IsQ prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s ++ "?"} ;
     This kind = {s = "este" ++ kind.s} ;
     That kind = {s = "esse" ++ kind.s} ;
     QKind quality kind = {s = kind.s ++ quality.s} ;
-    Wine = {s = "vinho"} ;
     Cheese = {s = "queijo"} ;
     Fish = {s = "peixe"} ;
     Bread = {s = "pão"} ;
@@ -22,7 +21,8 @@ concrete FoodPor of Food = {
     Cheap = {s = "econômico"} ;
     Delicious = {s = "delicioso"} ;
     Disgusting = {s = "nojento"} ;
-    Boring = {s = "entediante"} ;
+    -- free variation
+    Boring = {s = variants {"entediante" ; "enfadonho" ; "chato"}} ;
     Italian = {s = "italiano"} ;
     German = {s = "alemão"} ;
     Swedish = {s = "sueco"} ;
