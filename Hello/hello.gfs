@@ -1,0 +1,5 @@
+-- example gf script (multilingual generation)
+import HelloEng.gf
+import HelloPor.gf
+
+linearize Hello World
