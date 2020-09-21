@@ -4,7 +4,7 @@ concrete HelloEng of Hello = {
   -- linearization types definitions
   lincat Greeting, Recipient = {s : Str} ;
   
-  -- linearization definitions (record notation)
+  -- linearization definitions (fun definitions, using record notation)
   lin
     Hello recip = {s = "hello" ++ recip.s} ;
     Bye recip = {s = "bye" ++ recip.s} ;

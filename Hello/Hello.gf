@@ -1,5 +1,5 @@
 -- abstract syntax module
-abstract Hello = {
+abstract Hello = {  -- module header
   
   -- initial symbol
   flags startcat = Greeting ;
@@ -7,7 +7,7 @@ abstract Hello = {
   -- category declarations
   cat Greeting ; Recipient ;
   
-  -- function declarations
+  -- function declarations (for cat building)
   fun
     Hello : Recipient -> Greeting ;
     Bye : Recipient -> Greeting ;
