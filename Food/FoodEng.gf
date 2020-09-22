@@ -13,11 +13,11 @@ concrete FoodEng of Food = DrinkEng ** open StrOper, FoodResEng in { -- extend D
     QKind quality kind = {s = table { 
       _ => quality.s ++ kind.s ! Sing }
     } ;
-    Cheese = regKind "cheese" ;
-    Fish = regKind "fish" ; -- TODO: irregular plural
-    Bread = regKind "bread" ;
-    Rice = regKind "rice" ;
-    IceCream = regKind "ice cream" ;
+    Cheese = regNoun "cheese" ;
+    Fish = regNoun "fish" ; -- TODO: irregular plural
+    Bread = regNoun "bread" ;
+    Rice = regNoun "rice" ;
+    IceCream = regNoun "ice cream" ;
     Very quality = {s = "very" ++ quality.s} ;
     Fresh = {s = "fresh"} ;
     Warm = {s = "warm"} ;

@@ -9,8 +9,8 @@ resource FoodResPor = {
             g : Gender -- inherent
         } ;
 
-        -- example paradigm
-        regKind : Str -> Noun = \bebida -> {
+        -- example paradigm TODO: rename to regnoun
+        regNoun : Str -> Noun = \bebida -> {
           s = table {
             Sg => bebida ;
             Pl => bebida + "s" -- gluing operator

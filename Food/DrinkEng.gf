@@ -4,7 +4,7 @@ concrete DrinkEng of Drink = open FoodResEng in {
     lincat Kind = {s : Number => Str} ;
 
     lin
-        Wine = regKind "wine" ;
-        Beer = regKind "beer" ;
-        Lemonade = regKind "lemonade" ;
+        Wine = regNoun "wine" ;
+        Beer = regNoun "beer" ;
+        Lemonade = regNoun "lemonade" ;
 }
