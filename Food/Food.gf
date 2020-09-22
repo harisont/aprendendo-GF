@@ -8,7 +8,7 @@ abstract Food = Drink ** { -- extends Drink
   fun
     Is : Prefix -> Item -> Quality -> Phrase ;
     IsQ : Prefix -> Item -> Quality -> Phrase ;
-    This, That : Kind -> Item ;
+    This, That, These, Those : Kind -> Item ;
     QKind : Quality -> Kind -> Kind ;
     Cheese, Fish, Bread, Rice, IceCream : Kind ;
     Very : Quality -> Quality ;

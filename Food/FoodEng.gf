@@ -2,16 +2,17 @@ concrete FoodEng of Food = DrinkEng ** open StrOper, FoodResEng in { -- extend D
   -- examples of using opers defined in StrOper marked as --*
   
   lincat
-    Phrase, Item, Quality, Prefix = {s : Str} ;
-  
+    Phrase, Quality, Prefix = {s : Str} ;
+    Item = {s : Str ; a : Number} ;
   lin
-    Is prefix item quality = {s = prefix.s ++ item.s ++ "is" ++ quality.s} ;
-    IsQ prefix item quality = {s = prefix.s ++ "is" ++ item.s ++ quality.s ++ "?"} ;
-    -- only use singular for the moment (TODO: allow plural)
-    This kind = {s = "this" ++ kind.s ! Sing} ;
-    That kind = {s = "that" ++ kind.s ! Sing} ;
+    Is prefix item quality = {s = prefix.s ++ item.s ++ copula item.a ++ quality.s} ;
+    IsQ prefix item quality = {s = prefix.s ++ copula item.a ++ item.s ++ quality.s ++ "?"} ;
+    This = det "this" Sing ;
+    That = det "that" Sing ;
+    These = det "these" Plur ;
+    Those = det "those" Plur ;
     QKind quality kind = {s = table { 
-      _ => quality.s ++ kind.s ! Sing }
+      n => quality.s ++ kind.s ! n }
     } ;
     Cheese = regNoun "cheese" ;
     Fish = regNoun "fish" ; -- TODO: irregular plural
