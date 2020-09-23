@@ -1,9 +1,9 @@
 concrete FoodEng of Food = DrinkEng ** open StrOper, FoodResEng in { -- extend DrinkEng
-  -- examples of using opers defined in StrOper marked as --*
   
   lincat
     Phrase, Quality, Prefix = {s : Str} ;
     Item = {s : Str ; a : Number} ;
+
   lin
     Is prefix item quality = {s = prefix.s ++ item.s ++ copula item.a ++ quality.s} ;
     IsQ prefix item quality = {s = prefix.s ++ copula item.a ++ item.s ++ quality.s ++ "?"} ;

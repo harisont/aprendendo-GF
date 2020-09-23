@@ -1,14 +1,16 @@
 concrete FoodPor of Food = DrinkPor ** open FoodResPor in { -- extend DrinkPor
   
   lincat
-    Phrase, Item, Quality, Prefix = {s : Str} ;
+    Phrase, Quality, Prefix = {s : Str} ;
+    Item = {s : Str ; a : Number} ;
   
   lin
-    Is prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s} ;
-    IsQ prefix item quality = {s = prefix.s ++ item.s ++ "é" ++ quality.s ++ "?"} ;
-    -- only use singular masculine for the moment (TODO: allow plural + feminine)
-    This kind = {s = "este" ++ kind.s ! Sing} ;
-    That kind = {s = "esse" ++ kind.s ! Sing} ;
+    Is prefix item quality = {s = prefix.s ++ item.s ++ copula item.a ++ quality.s} ;
+    IsQ prefix item quality = {s = prefix.s ++ item.s ++ copula item.a ++ quality.s ++ "?"} ;
+    This kind = det (este ! kind.g) Sing kind ;
+    That kind = det (esse ! kind.g) Sing kind ;
+    These kind = det (estos ! kind.g) Plur kind ;
+    Those kind = det (esses ! kind.g) Plur kind ;
     QKind quality kind = {
       s = table {
       _ => kind.s ! Sing ++ quality.s 
