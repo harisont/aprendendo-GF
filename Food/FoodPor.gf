@@ -15,11 +15,11 @@ concrete FoodPor of Food = DrinkPor ** open FoodResPor in { -- extend DrinkPor
       } ;
       g = Masc
     } ;
-    Cheese = regKind "queijo" ;
-    Fish = regKind "peixe" ; -- TODO: irregular (?) gender
-    Bread = regKind "pão" ;
-    Rice = regKind "arroz" ; -- TODO: irregular number
-    IceCream = regKind "gelato" ;
+    Cheese = regNoun "queijo" ;
+    Fish = regNoun "peixe" ; -- TODO: irregular (?) gender
+    Bread = regNoun "pão" ;
+    Rice = regNoun "arroz" ; -- TODO: irregular number
+    IceCream = regNoun "gelato" ;
     Very quality = {s = "muito" ++ quality.s} ;
     Fresh = {s = "fresco"} ;
     Warm = {s = "quente"} ;
