@@ -3,6 +3,7 @@ Prerequisites:
 - Java Development Kit
 - GF C runtime
 - the grammar you want to use in `.pgf` format
+- Android Studio
 
 ## Step 1: Compile the Java bindings
 
@@ -11,11 +12,11 @@ Prerequisites:
 Even if you have installed GF and its C runtime, you might have never needed to compile the Java bindings.
 If this is the case, follow these steps:
 
-1. move to the Java bindings folder:
+1. __move to the Java bindings folder__:
     ```
     cd WHEREVER-YOU-CLONED-GF-CORE/gf-core/src/runtime/java
     ```
-2. try running `make`. If this fails with an error such as
+2. __try running `make`__. If this fails with an error such as
    ```
    Makefile:33: *** No JNI headers found.  Stop.
    ```
@@ -44,7 +45,7 @@ If this is the case, follow these steps:
    JNI_INCLUDES = -I /home/harisont/.cache/yay/android-studio/src/android-studio/jre/include/ -I /home/harisont/.cache/yay/android-studio/src/android-studio/jre/include/linux
    ```
    > __NOTE:__ on Windows, the syntax varies slightly, but the `Makefile` offers some good examples
-3. run `make install`. You should get something like
+3. __run `make install`__. You should get something like
    ```
    ----------------------------------------------------------------------
    Libraries have been installed in:
@@ -68,4 +69,35 @@ If this is the case, follow these steps:
    ```
 
 ## Step 2: Import `jpgf` in Android Studio
+Alright, at this point you should have something called `jpgf` installed somewhere. In my case, that somewhere is `/usr/local/lib`, as shown in the message above. In fact, I can run
 
+```
+~ ls /usr/local/lib | grep jpgf                          
+jpgf.jar
+libjpgf.la
+libjpgf.so
+libjpgf.so.0
+libjpgf.so.0.0.0
+```
+
+The `.jar` file is what we really care about. Time to put it to use in Android Studio!
+
+1. open Android Studio and __create a new project__ (`File > New > New Project`). If you want to reproduce my simple demo app, select `Empty Activity`, then `Next`, and use this screenshot as a reference in the following screen:
+   ![New projects](new_project.png)
+   
+   > __NOTE:__ I set `Language` to `Kotlin` as it is my preferred Android development language and any Java library can also be used as a Kotlin library. Isn't that magic?
+   
+   Then click on `Finish` and let Gradle do his thing.
+2. __copy the `.jar` file to `/app/libs` subfolder of your Android Studio Project__. For instance:
+   ```
+   cp /usr/local/lib/jpgf.jar GFDemo/app/libs
+   ```
+3. __add the `.jar` to the project dependencies__: 
+   - go to `File > Project Structure`
+   - select the `Dependencies` tab
+   - click on the `+` button (`Add dependencies`) and select `JAR/AAR dependency`:
+     ![Add dependency](dependencies.png)
+   - provide the path to the jar file just added. Note that `app` is the default folder where dependencies are stored, so typing in `libs/jpgf.jar` should suffice:
+     ![Provide path to JAR file](dependencies_path.png)
+   - click on `Ok` (twice) and let Gradle do his job again
+4. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up).
