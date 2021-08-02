@@ -100,7 +100,12 @@ The `.jar` file is what we really care about. Time to put it to use in Android S
    - provide the path to the jar file just added. Note that `app` is the default folder where dependencies are stored, so typing in `libs/jpgf.jar` should suffice:
      ![Provide path to JAR file](dependencies_path.png)
    - click on `Ok` (twice) and let Gradle do his job again
-4. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up).
+4. in Android Studio, __right click on the `.jar` file and select `Add As Library`__
+5. __import it in `MainActivity.kt`__ (or `MainActivity.java` if you're using Java) by adding the following import statement:
+   ```kotlin
+   import org.grammaticalframework.pgf.*
+   ```
+6. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up).
 
 ## Step 3: Prepare a `.pgf` for your Android app
 If you run the app as it is, you should hopefully see something like this:
@@ -178,3 +183,11 @@ Of course, we can change it programatically. Android development can be confusin
 If you relaunch the app, it will display "Hello Everyone!" instead of "Hello World!". Now it's time to get our greetings from GF!
 
 ## Step 5: Finally using the grammar in your Android app!
+> __NOTE:__ I will just show you how to make GF work in an Android app at its most basic level. For a more in-depth tutorial about the Java bindings, follow [this link](https://www.grammaticalframework.org/doc/runtime-api.html#java).
+
+Let's keep working in the `onCreate` method of our `MainActivity`.
+
+1. __Read your `.pgf` file__. In my case, that just means adding this line:
+   ```kotlin
+   
+   ```
