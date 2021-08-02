@@ -101,3 +101,29 @@ The `.jar` file is what we really care about. Time to put it to use in Android S
      ![Provide path to JAR file](dependencies_path.png)
    - click on `Ok` (twice) and let Gradle do his job again
 4. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up).
+
+## Step 3: Prepare a `.pgf` for your Android app
+If you run the app as it is, you should hopefully see something like this:
+![Hello world](hello.png)
+
+For this tutorial, we have a simple goal: to replace that boring "Hello World!" that we see every time we launch the app with a randomly generated sentence using the `Hello` grammar (in my case, I'll use my own English-Portuguese version, but you can use any grammar).
+
+The first step in this direction is to place a grammar in `.pgf` format in the correct folder of our Android Studio project.
+
+1. Move to the folder your grammar is stored in and __compile it to `.pgf`__. In my case:
+   ```
+   ~ gf -make HelloEng.gf HelloPor.gf
+   - compiling HelloEng.gf...   write file HelloEng.gfo
+   linking ... OK
+   Writing Hello.pgf...
+   ```
+2. in Android terms, we treat the resulting `.pgf` file as an asset. In your Android studio project, __create a directory named `assets` under `app/src`__. In my case, from the main project folder:
+   ```
+   mkdir app/src/main/assets
+   ```
+3. __copy the `.pgf` to `assets`__:
+   ```
+   cp ../Hello/Hello.pgf app/src/main/assets
+   ```
+
+## Step 4: Finally using the grammar in your Android app!
