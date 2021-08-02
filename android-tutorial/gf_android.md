@@ -1,4 +1,4 @@
-# Using GF grammars in Android applications
+# Using GF grammars in Android applications: a step-by-step tutorial
 Prerequisites:
 - Java Development Kit
 - GF C runtime
@@ -126,4 +126,52 @@ The first step in this direction is to place a grammar in `.pgf` format in the c
    cp ../Hello/Hello.pgf app/src/main/assets
    ```
 
-## Step 4: Finally using the grammar in your Android app!
+## Step 4 (optional): getting to know the code of the automatically generated Android app
+In the automatically generated Android Studio project app, the "Hello World!" text is set in the layout (`activity_main.xml`) file used in the main Activity:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!" -- LOOK HERE
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Of course, we can change it programatically. Android development can be confusing, so let's first do it without using GF:
+
+1. In the `.xml` file, __add an `id` to the `TextView`__. This means adding the following line anywhere inside the `TextView` tag:
+   ```xml
+   android:id="@+id/sentence"
+   ```
+2. __go to the `MainActivity` class of the `MainActivity` module__. If you are using Kotlin, it should look something like this:
+   ```kotlin
+   class MainActivity : AppCompatActivity() {
+      override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_main)
+      }
+   }
+   ```
+3. after the call to `setContentView`, the function setting the Activity's layout, add the following line, which modifies the `TextField`'s text:
+   ```
+   sentence.text = "Hello Everyone!"
+   ```
+
+   > __NOTE:__ yes, no stupid calls to `findViewById` or anything like that. That's why we use Kotlin after all! If this doesn't work, that's because for some weird reason your Kotlin extensions are not enabled by default. No worries, [enabling them is easy enough](https://stackoverflow.com/questions/64431882/how-to-enable-kotlin-android-extensions-by-default-in-android-studio-4-1).
+
+If you relaunch the app, it will display "Hello Everyone!" instead of "Hello World!". Now it's time to get our greetings from GF!
+
+## Step 5: Finally using the grammar!
