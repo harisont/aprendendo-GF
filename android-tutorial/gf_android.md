@@ -170,8 +170,11 @@ Of course, we can change it programatically. Android development can be confusin
    sentence.text = "Hello Everyone!"
    ```
 
-   > __NOTE:__ yes, no stupid calls to `findViewById` or anything like that. That's why we use Kotlin after all! If this doesn't work, that's because for some weird reason your Kotlin extensions are not enabled by default. No worries, [enabling them is easy enough](https://stackoverflow.com/questions/64431882/how-to-enable-kotlin-android-extensions-by-default-in-android-studio-4-1).
+   > __NOTE:__ yes, no stupid calls to `findViewById` or anything like that. That's why we use Kotlin after all! If this doesn't work, that's because for some weird reason your Kotlin extensions are not enabled by default. No worries, [enabling them is easy enough](https://stackoverflow.com/questions/64431882/how-to-enable-kotlin-android-extensions-by-default-in-android-studio-4-1). If you do that, you might need to add the following `import` statement to your `MainActivity.kt:
+     ```kotlin
+     import kotlinx.android.synthetic.main.activity_main.*
+     ```
 
 If you relaunch the app, it will display "Hello Everyone!" instead of "Hello World!". Now it's time to get our greetings from GF!
 
-## Step 5: Finally using the grammar!
+## Step 5: Finally using the grammar in your Android app!
