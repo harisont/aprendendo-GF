@@ -80,7 +80,7 @@ libjpgf.so.0
 libjpgf.so.0.0.0
 ```
 
-The `.jar` file is what we really care about. Time to put it to use in Android Studio!
+The `.jar` and `.so` files are what we really care about. Time to put them to use in Android Studio!
 
 1. open Android Studio and __create a new project__ (`File > New > New Project`). If you want to reproduce my simple demo app, select `Empty Activity`, then `Next`, and use this screenshot as a reference in the following screen:
    ![New projects](new_project.png)
@@ -88,11 +88,23 @@ The `.jar` file is what we really care about. Time to put it to use in Android S
    > __NOTE:__ I set `Language` to `Kotlin` as it is my preferred Android development language and any Java library can also be used as a Kotlin library. Isn't that magic?
    
    Then click on `Finish` and let Gradle do his thing.
-2. __copy the `.jar` file to `/app/libs` subfolder of your Android Studio Project__. For instance:
+2. __create two (yes, two) folders for the `.so` file__. From the source folder of your Android Studio project, you can run
+   ```
+   ~ mkdir app/src/main/jniLibs
+   ~ mkdir app/src/main/jniLibs/armeabi
+   ~ mkdir app/src/main/jniLibs/x86
+   ```
+   the latter two subfolders are architecture-specific
+3. __copy the__ `.so` file to each of them:
+   ```
+   cp /usr/local/lib/libjpgf.so app/src/main/jniLibs/armeabi
+   cp /usr/local/lib/libjpgf.so app/src/main/jniLibs/x86
+   ``` 
+4. __copy the `.jar` file to `/app/libs` subfolder of your Android Studio Project__. For instance:
    ```
    cp /usr/local/lib/jpgf.jar GFDemo/app/libs
    ```
-3. __add the `.jar` to the project dependencies__: 
+5. __add the `.jar` to the project dependencies__: 
    - go to `File > Project Structure`
    - select the `Dependencies` tab
    - click on the `+` button (`Add dependencies`) and select `JAR/AAR dependency`:
@@ -100,12 +112,12 @@ The `.jar` file is what we really care about. Time to put it to use in Android S
    - provide the path to the jar file just added. Note that `app` is the default folder where dependencies are stored, so typing in `libs/jpgf.jar` should suffice:
      ![Provide path to JAR file](dependencies_path.png)
    - click on `Ok` (twice) and let Gradle do his job again
-4. in Android Studio, __right click on the `.jar` file and select `Add As Library`__
-5. __import it in `MainActivity.kt`__ (or `MainActivity.java` if you're using Java) by adding the following import statement:
+6. in Android Studio, __right click on the `.jar` file and select `Add As Library`__
+7. __import it in `MainActivity.kt`__ (or `MainActivity.java` if you're using Java) by adding the following import statement:
    ```kotlin
    import org.grammaticalframework.pgf.*
    ```
-6. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up).
+8. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up).
 
 ## Step 3: Prepare a `.pgf` for your Android app
 If you run the app as it is, you should hopefully see something like this:
