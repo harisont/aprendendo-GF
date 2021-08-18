@@ -1,101 +1,66 @@
 # Using GF grammars in Android applications: a step-by-step tutorial
-Prerequisites:
-- Java Development Kit
-- GF C runtime
-- the grammar you want to use in `.pgf` format
-- Android Studio
+This guide explains how to reproduce the template app contained in this repository. Unless you need an understanding of what's going on or you encountered some issues with the template app itself, you can simply fork this repository and start working on the code.
+## Requirements
+- the [Android Studio](https://developer.android.com/studio/) IDE (yes, you can use other IDEs too but don't ask me exactly how)
+- the Android SDK (API libraries and tools necessary to build, test, and debug Andorid apps. Usually comes with Android Studio but who knows, there's countless ways to install it)
+- an Android device with USB debugging enabled and/or an emulator (you can set it up from Android Studio)
+- [GF](https://www.grammaticalframework.org/download/index-3.11.html) 
+- a GF grammar ready to use in your application
+- plenty of patience.
 
-## Step 1: Compile the Java bindings
-
-> __NOTE:__ You might be able to skip this step if you have installed a GF binary.
-
-Even if you have installed GF and its C runtime, you might have never needed to compile the Java bindings.
-If this is the case, follow these steps:
-
-1. __move to the Java bindings folder__:
-    ```
-    cd WHEREVER-YOU-CLONED-GF-CORE/gf-core/src/runtime/java
-    ```
-2. __try running `make`__. If this fails with an error such as
-   ```
-   Makefile:33: *** No JNI headers found.  Stop.
-   ```
-   that means that the `Makefile` was unable to locate your `jni.h` and `jni_md.h` files. What are they, you might well be wondering? Well, they are some `jdk` things we don't really need to understand. We just need to `locate` them:
-   ```
-   locate jni.h
-   ```
-   In my case, as I messed up with different versions of Java for different projects, this returns various locations:
-   ```
-   /home/harisont/.cache/yay/android-studio/src/android-studio/jre/include/jni.h
-   /home/harisont/.jdks/corretto-1.8.0_292/include/jni.h
-   /usr/include/libavcodec/jni.h
-   /usr/lib/jvm/java-11-openjdk/include/jni.h
-   /usr/lib/jvm/java-16-openjdk/include/jni.h
-   ```
-   and the results are similar if I try to `locate jni_md.h`:
-   ```
-    /home/harisont/.cache/yay/android-studio/src/android-studio/jre/include/linux/jni_md.h
-    /home/harisont/.jdks/corretto-1.8.0_292/include/linux/jni_md.h
-    /usr/lib/jvm/java-11-openjdk/include/linux/jni_md.h
-    /usr/lib/jvm/java-16-openjdk/include/linux/jni_md.h
-   ```
-   Common sense suggests me that I should use the first path, as it seems to be the one of the JDK used by Android Studio. But this might as well make no difference.
-   Once you have decided what path to try and use, modify the `Makefile`: replace whatever is assigned to `JNI_INCLUDES` with `-I FOLDER-CONTAINING-jni.h FOLDER-CONTAINING-jni_md.h`. In my case, this means
-   ```
-   JNI_INCLUDES = -I /home/harisont/.cache/yay/android-studio/src/android-studio/jre/include/ -I /home/harisont/.cache/yay/android-studio/src/android-studio/jre/include/linux
-   ```
-   > __NOTE:__ on Windows, the syntax varies slightly, but the `Makefile` offers some good examples
-
-   Now rerun `make`. After you do this, you should have a file called `jpgf.jar` in your current folder.
-
-## Step 2: Import `jpgf` in Android Studio
-Alright, time to put this `.jar` to use in Android Studio!
-
-1. open Android Studio and __create a new project__ (`File > New > New Project`). If you want to reproduce my simple demo app, select `Empty Activity`, then `Next`, and use this screenshot as a reference in the following screen:
+## Step 1: Create an Android Studio project
+1. launch Android Studio 
+2. click (`File > New > New Project`). 
+3. select `Empty Activity`, then `Next`
+4. for the following screen, you can use this screenshot as a reference:
    ![New projects](new_project.png)
    
    > __NOTE:__ I set `Language` to `Kotlin` as it is my preferred Android development language and any Java library can also be used as a Kotlin library. Isn't that magic?
    
-   Then click on `Finish` and let Gradle do his thing.
-2. __copy the `.jar` file to `/app/libs` subfolder of your Android Studio Project__. For instance, from the top folder of your Android Studio Project:
-   ```
-   cp WHEREVER-YOU-CLONED-GF-CORE/gf-core/src/runtime/java/jpgf.jar app/libs
-   ```
-3. in Android studio, __right click on `jpgf.jar` and select `Add As Library...`__
-4. in the `Create Library` dialog that pops up, just click on `OK`.
-   > __NOTE:__ if you can't find `jpgf.jar`, that means you're browsing files in `Android` mode. `Android` mode is evil, so I'd switch to `Project` mode regardless. by doing so, you'll be able to see the actual directory structure just like normal
-5. __import it in `MainActivity.kt`__ (or `MainActivity.java` if you're using Java) by adding the following import statement:
-   ```kotlin
-   import org.grammaticalframework.pgf.*
-   ```
-6. __check that everything works__ by trying to build (or even run, if you have a physical Android device or emulator already set up. If not, well, set it up).
+5. click on `Finish` and let Gradle do his thing. It will take a while.
 
-## Step 3: Prepare a `.pgf` for your Android app
-If you run the app as it is, you should hopefully see something like this:
-![Hello world](hello.png)
+## Step 2: Download or build the GF Java bindings as JAR file
+If you want to get started quickly, just download [this JAR file](prebuilt/jpgf.jar).
 
-For this tutorial, we have a simple goal: to replace that boring "Hello World!" that we see every time we launch the app with a randomly generated sentence using the `Hello` grammar (in my case, I'll use my own English-Portuguese version, but you can use any grammar).
+If you are someone who has a little bit of time to spare, or who has good reasons to think the Java bindings have changed, you can of course build it yourself:
 
-The first step in this direction is to place a grammar in `.pgf` format in the correct folder of our Android Studio project.
+1. if you installed GF from a binary package, clone [gf-core](https://github.com/GrammaticalFramework/gf-core)
+2. from the gf-core folder, move to the Java bindings folder
+   ```
+   cd src/runtime/java/
+   ```
+3. compile the Java bindings: 
+   ```
+   javac org/grammaticalframework/*/*.java
+   ```
+4. build the jar
+   ```
+   jar -cf jpgf.jar org/grammaticalframework/pgf/*.class
+   ```
+   at this point you should have a file named `jpgf.jar` in the current folder.
 
-1. Move to the folder your grammar is stored in and __compile it to `.pgf`__. In my case:
-   ```
-   ~ gf -make HelloEng.gf HelloPor.gf
-   - compiling HelloEng.gf...   write file HelloEng.gfo
-   linking ... OK
-   Writing Hello.pgf...
-   ```
-2. in Android terms, we treat the resulting `.pgf` file as an asset. In your Android studio project, __create a directory named `assets` under `app/src`__. In my case, from the main project folder:
-   ```
-   mkdir app/src/main/assets
-   ```
-3. __copy the `.pgf` to `assets`__:
-   ```
-   cp ../../Hello/Hello.pgf app/src/main/assets
-   ```
+## Step 3: Provide Android Studio with the necessary `.jar` and `.so` files
+1. copy `jpgf.jar` to your Android Studio project's `app/libs` folder
+2. in Android Studio, right click on `jpgf.jar` (for your own sanity, switch to Project view, otherwise you'll see a different directory structure) and select `Add As Library...` and click `Ok` in the dialog that will pop up
+3. copy [the three folders under `/prebuilt`](prebuilt) to your Android Studio project's `app/src/main/jniLibs` (if it does not exist, create it). They contain the `.so` files for different smartphone and tablet architectures
+   > __NOTE:__ If you're wondering why you _have to_ download these prebuilt files, the reason is that I don't really know how to build them. In case you want to find a way, here are some hints: 
+   >
+   > - you will need the [Android NDK](https://developer.android.com/ndk/)
+   > - you probably want to check the now archived monolithic [GF repository](https://github.com/GrammaticalFramework/GF), and [this folder](https://github.com/GrammaticalFramework/GF/tree/master/src/ui/android/jni) in particular.
+   >
+   > If you find a solution, be sure to open a PR!
 
-## Step 4 (optional): getting to know the code of the automatically generated Android app
-In the automatically generated Android Studio project app, the "Hello World!" text is set in the layout (`activity_main.xml`) file used in the main Activity:
+## Step 4: Provide Android studio with the actual grammar
+1. move to the folder where your GF grammar is stored. In this template app, we use the `Hello` grammar under `grammars`
+2. compile it to PGF with `gf -make`
+3. create a directory named `assets` under your Android Studio project's `app/src/main`
+4. __copy the PGF to `assets`
+
+## Step 5 (optional): getting to know the code of the automatically generated Android app
+If you run the Android app generated by Android Studio as it is, you should see something like this:
+![The Android app as generated by Android Studio](hello.png).
+
+The "Hello World!" text you see in the screenshot is set in the layout (`activity_main.xml`) file used in the main Activity:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -107,22 +72,18 @@ In the automatically generated Android Studio project app, the "Hello World!" te
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" -- LOOK HERE
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        ...
+        android:text="Hello World!"
+        .../>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-Of course, we can change it programatically. Android development can be confusing, so let's first do it without using GF:
+Of course, we can change it programatically, from Kotlin or Java code. Android development can be confusing, so let's first do it _without_ using our GF grammar:
 
-1. In the `.xml` file, __add an `id` to the `TextView`__. This means adding the following line anywhere inside the `TextView` tag:
+1. in the `.xml` file, __add an `id` to the `TextView`__. This means adding the following line anywhere inside the `TextView` tag:
    ```xml
-   android:id="@+id/sentence"
+   android:id="@+id/greeting"
    ```
 2. __go to the `MainActivity` class of the `MainActivity` module__. If you are using Kotlin, it should look something like this:
    ```kotlin
@@ -135,7 +96,7 @@ Of course, we can change it programatically. Android development can be confusin
    ```
 3. after the call to `setContentView`, the function setting the Activity's layout, add the following line, which modifies the `TextField`'s text:
    ```
-   sentence.text = "Hello Everyone!"
+   greeting.text = "Hello Everyone!"
    ```
 
    > __NOTE:__ yes, no stupid calls to `findViewById` or anything like that. That's why we use Kotlin after all! If this doesn't work, that's because for some weird reason your Kotlin extensions are not enabled by default. No worries, [enabling them is easy enough](https://stackoverflow.com/questions/64431882/how-to-enable-kotlin-android-extensions-by-default-in-android-studio-4-1). If you do that, you might need to add the following `import` statement to your `MainActivity.kt:
@@ -145,12 +106,19 @@ Of course, we can change it programatically. Android development can be confusin
 
 If you relaunch the app, it will display "Hello Everyone!" instead of "Hello World!". Now it's time to get our greetings from GF!
 
-## Step 5: Finally using the grammar in your Android app!
+## Step 6 (optional): Random greetings with GF!
+It's finally time to use GF from Android:
+
+1. in `MainActivity.kt` (or `MainActivity.java` if you're using Java), add the following import statement:
+   ```kotlin
+   import org.grammaticalframework.pgf.*
+   ```
+2. 
+
+---
+
+
+For this tutorial, we have a simple goal: to replace that boring "Hello World!" that we see every time we launch the app with a randomly generated sentence using the `Hello` grammar (in my case, I'll use my own English-Portuguese version, but you can use any grammar).
+
 > __NOTE:__ I will just show you how to make GF work in an Android app at its most basic level. For a more in-depth tutorial about the Java bindings, follow [this link](https://www.grammaticalframework.org/doc/runtime-api.html#java).
 
-Let's keep working in the `onCreate` method of our `MainActivity`.
-
-1. __Read your `.pgf` file__. In my case, that just means adding this line:
-   ```kotlin
-   
-   ```
