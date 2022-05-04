@@ -1,7 +1,7 @@
 # Aprendendo GF
 My GF playground, using moslty Portuguese in the hope to learn some of it too. 
 
-# Contents
+## Contents
 - some [notes](notes.md) about random GF things I tended or still tend to forget & confuse
 - some things I did to learn GF while taking the Computational Syntax course @ GU, collaterally to the [course assigmenents](https://github.com/harisont/comp-syntax-2020):
   - my GF ["Hello world"](Hello/)
@@ -9,4 +9,4 @@ My GF playground, using moslty Portuguese in the hope to learn some of it too.
 - some other things I did _after_ passing the Computational Syntax course:
 - a [tiny tiny application grammar](Music/) for the music domain. The point here was to learn how to make use of the RGL in semantic grammars
 - some [well documented](android/gf_android.md) but frustrating [experiments](android/) using GF in Android apps via the Java bindings
-- a [Portuguese Micro grammar](portuguese) implemented while TAing in the Computational Syntax course (__ongoing__)
+- a [Portuguese Micro grammar](comp-syn-lab2-alt2/portuguese/) implemented while TAing in the Computational Syntax course (__ongoing__)
