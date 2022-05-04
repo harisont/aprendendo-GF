@@ -7,6 +7,6 @@ My GF playground, using moslty Portuguese in the hope to learn some of it too.
   - my GF ["Hello world"](Hello/)
   - following the basic GF tutorial, a [Food (and Drink) grammar](Food/)
 - some other things I did _after_ passing the Computational Syntax course:
-- a [tiny tiny application grammar](Music/) for the music domain. The point here was to learn how to make use of the RGL in semantic grammars
-- some [well documented](android/gf_android.md) but frustrating [experiments](android/) using GF in Android apps via the Java bindings
-- a [Portuguese Micro grammar](comp-syn-lab2-alt2/portuguese/) implemented while TAing in the Computational Syntax course (__ongoing__)
+  - a [tiny tiny application grammar](Music/) for the music domain. The point here was to learn how to make use of the RGL in semantic grammars
+  - some [well documented](android/gf_android.md) but frustrating [experiments](android/) using GF in Android apps via the Java bindings
+  - a [Portuguese Micro grammar](comp-syn-lab2-alt2/portuguese/) implemented while TAing in the Computational Syntax course (__ongoing__)
