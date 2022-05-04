@@ -2,6 +2,7 @@ resource MicroResPor = open Prelude in {
 
 param
   Number = Sg | Pl ;
+  Gender = Masc | Femm ;
   Case = Nom | Acc ;
 
 
@@ -11,21 +12,35 @@ param
   VForm = Inf | PresSg3 | Past | PastPart | PresPart ; 
 
 oper
-  Noun : Type = {s : Number => Str} ;
-
-  mkNoun : Str -> Str -> Noun = \sg,pl -> {
-    s = table {Sg => sg ; Pl => pl}
+  Noun : Type = {
+    s : Number => Str;
+    g : Gender
     } ;
 
-  regNoun : Str -> Noun = \sg -> mkNoun sg (sg + "s") ;
-
-  -- smart paradigm
-  smartNoun : Str -> Noun = \sg -> case sg of {
-    _ + ("ay"|"ey"|"oy"|"uy") => regNoun sg ;
-    x + "y"                   => mkNoun sg (x + "ies") ;
-    _ + ("ch"|"sh"|"s"|"o")   => mkNoun sg (sg + "es") ;
-    _                         => regNoun sg
+  mkNoun : Str -> Str -> Gender -> Noun = \sg,pl,gn -> {
+    s = table {Sg => sg ; Pl => pl};
+    g = gn
     } ;
+
+  regNoun : Str -> Noun = \sg -> mkNoun sg (nounPlural sg) (nounGender sg) ;
+
+  -- infers gender for regular nouns
+  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Da_flex%C3%A3o_dos_substantivos
+  nounGender : Str -> Gender = \s -> case s of {
+    x + ("o" | "i" | "u" | "é" | "em" | "im" | "om" | "um" | "r" | "s" | "l") => Masc ;
+    x + ("a" | "ã" | "ão" | "gem" | "dade" | "ice" | "e" | "ê") => Femm ;
+    _ => Predef.error("Gender of " ++ s ++ " is unknown")
+  } ;
+
+  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Da_flex%C3%A3o_dos_substantivos
+  nounPlural : Str -> Str = \sg -> case sg of {
+    x + ("s" | "z" | "r") => x + "es" ;
+    x + "ão" => x + "ões" ;
+    anim + "al" => anim + "ais" ;
+    lenç + "ol" => lenç + "ois" ;
+    pa + "ul" => pa + "uis" ;
+    x => x + "s"
+  } ;
 
   Adjective : Type = {s : Str} ;
 

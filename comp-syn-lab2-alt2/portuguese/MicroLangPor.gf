@@ -65,9 +65,9 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
     
     UseN n = n ;
     
-    AdjCN ap cn = {
-      s = table {n => ap.s ++ cn.s ! n}
-      } ;
+    --AdjCN ap cn = {
+    --  s = table {n => ap.s ++ cn.s ! n}
+    --  } ;
 
     PositA a = a ;
 
@@ -104,7 +104,7 @@ lin big_A = mkA "grande" ;
 lin bike_N = mkN "bicicleta" ;
 lin bird_N = mkN "pássaro" ;
 lin black_A = mkA "preto" ;
-lin blood_N = mkN "sangue" ;
+lin blood_N = mkN "sangue" Masc ;
 lin blue_A = mkA "azul" ;
 lin boat_N = mkN "barco" ;
 lin book_N = mkN "livro" ;
@@ -186,10 +186,14 @@ lin young_A = mkA "jovem" ;
 
 oper
   mkN = overload {
-    mkN : Str -> Noun   -- predictable noun, e.g. car-cars, boy-boys, fly-flies, bush-bushes
-      = \n -> lin N (smartNoun n) ;
-    mkN : Str -> Str -> Noun  -- irregular noun, e.g. man-men
-      = \sg,pl -> lin N (mkNoun sg pl) ;
+    mkN : Str -> Noun   -- predictable noun, e.g. livro-livros, cor-cores, questão-questões, lençol-lençóis
+      = \n -> lin N (regNoun n) ;
+    mkN : Str -> Gender -> Noun -- regular noun with unpredicable gender, e.g. poeta-poetas
+      = \sg,gn -> lin N (mkNoun sg (nounPlural sg) gn) ;
+    mkN : Str -> Str -> Noun -- irregular noun with predictable gender, e.g. alemão-alemães
+      = \sg,pl -> lin N (mkNoun sg pl (nounGender sg)) ;
+    mkN : Str -> Str -> Gender -> Noun  -- irregular noun with unpredictable gender, e.g. cinema-cinemas
+      = \sg,pl,gn -> lin N (mkNoun sg pl gn) ;
     } ;
 
   mkA : Str -> A
