@@ -4,14 +4,27 @@ param
   Number = Sg | Pl ;
   Gender = Masc | Femm ;
   Case = Nom | Acc ;
+  Person = I | II | III ;
 
-
-  Agreement = Agr Number ; ---s Person to be added
+  NGAgreement = NGAgr Number Gender ; -- used e.g. for noun-adj agreement
+  NPAgreement = NPAgr Number Person ; -- used e.g. for verb-subj (pron) agreement
 
   -- all forms of normal Por verbs, although not yet used in MiniGrammar
   VForm = Inf | PresSg3 | Past | PastPart | PresPart ; 
 
 oper
+
+  -- used both for nouns and adjectives
+  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Da_flex%C3%A3o_dos_substantivos
+  plural : Str -> Str = \sg -> case sg of {
+    x + ("s" | "z" | "r") => x + "es" ;
+    x + "ão" => x + "ões" ;
+    anim + "al" => anim + "ais" ;
+    lenç + "ol" => lenç + "ois" ;
+    pa + "ul" => pa + "uis" ;
+    x => x + "s"
+  } ;
+
   Noun : Type = {
     s : Number => Str;
     g : Gender
@@ -22,7 +35,7 @@ oper
     g = gn
     } ;
 
-  regNoun : Str -> Noun = \sg -> mkNoun sg (nounPlural sg) (nounGender sg) ;
+  regNoun : Str -> Noun = \sg -> mkNoun sg (plural sg) (nounGender sg) ;
 
   -- infers gender for regular nouns
   -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Da_flex%C3%A3o_dos_substantivos
@@ -32,17 +45,32 @@ oper
     _ => Predef.error("Gender of " ++ s ++ " is unknown")
   } ;
 
-  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Da_flex%C3%A3o_dos_substantivos
-  nounPlural : Str -> Str = \sg -> case sg of {
-    x + ("s" | "z" | "r") => x + "es" ;
-    x + "ão" => x + "ões" ;
-    anim + "al" => anim + "ais" ;
-    lenç + "ol" => lenç + "ois" ;
-    pa + "ul" => pa + "uis" ;
-    x => x + "s"
+  Adjective : Type = { s : NGAgreement => Str; } ;
+
+  mkAdjective : Str -> Str -> Str -> Str -> Adjective = \msg,mpl,fsg,fpl -> {
+    s = table {
+      NGAgr Sg Masc => msg ;
+      NGAgr Pl Masc => mpl ;
+      NGAgr Sg Femm => fsg ;
+      NGAgr Pl Femm => fpl 
+    } ;
   } ;
 
-  Adjective : Type = {s : Str} ;
+  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Flex%C3%B5es_do_adjetivo
+  feminine : Str -> Str = \sg -> case sg of {
+    x + ("és" | "or" | "u") => sg + "a" ;
+    europ + "eu" => europ + "éia" ;
+    pront + "o" => pront + "a" ;
+    _ => Predef.error("The feminine form of " ++ sg ++ " is unknown")
+  } ;
+
+  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Flex%C3%B5es_do_adjetivo
+  smartAdjective : Str -> Adjective = \msg -> case msg of {
+    -- uniformes
+    x + ("al" | "el" | "il" | "ul" | "ar" | "er" | "az" | "iz" | "oz" | "uz" | "e" | "em") => let pl = plural msg in mkAdjective msg pl msg pl ;
+    -- biformes
+    _ => let fsg = feminine msg in mkAdjective msg (plural msg) fsg (plural fsg)
+  } ;
 
   Verb : Type = {s : VForm => Str} ;
 
@@ -82,9 +110,9 @@ oper
 
 
 ---s a very simplified verb agreement function for Micro
-  agr2vform : Agreement -> VForm = \a -> case a of {
-    Agr Sg => PresSg3 ;
-    Agr Pl => Inf
-    } ;
-
+--  agr2vform : NPAgreement -> VForm = \a -> case a of {
+--    Agr Sg => PresSg3 ;
+--    Agr Pl => Inf
+--    } ;
+--
 }

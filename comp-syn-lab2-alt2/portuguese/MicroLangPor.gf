@@ -13,8 +13,8 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
     Comp = {s : Str} ;
     AP = Adjective ;
     CN = Noun ;
-    NP = {s : Case => Str ; a : Agreement} ;
-    Pron = {s : Case => Str ; a : Agreement} ;
+    NP = {s : Case => Str ; a : NGAgreement} ;
+    Pron = {s : Case => Str ; a : NGAgreement} ;
     Det = {s : Str ; n : Number} ;
     Prep = {s : Str} ;
     V = Verb ;
@@ -27,9 +27,9 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
     UttS s = s ;
     UttNP np = {s = np.s ! Acc} ;
 
-    PredVPS np vp = {
-      s = np.s ! Nom ++ vp.verb.s ! agr2vform np.a ++ vp.compl
-      } ;
+    --PredVPS np vp = {
+    --  s = np.s ! Nom ++ vp.verb.s ! agr2vform np.a ++ vp.compl
+    --  } ;
       
     UseV v = {
       verb = v ;
@@ -46,14 +46,14 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
       compl = comp.s
       } ;
       
-    CompAP ap = ap ;
+    -- CompAP ap = ap ;
       
     AdvVP vp adv =
       vp ** {compl = vp.compl ++ adv.s} ;
       
     DetCN det cn = {
       s = \\c => det.s ++ cn.s ! det.n ;
-      a = Agr det.n ;
+      a = NGAgr det.n cn.g ;
       } ;
       
     UsePron p = p ;
@@ -79,15 +79,15 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
 
     he_Pron = {
       s = table {Nom => "he" ; Acc => "him"} ;
-      a = Agr Sg ;
+      a = NGAgr Sg Masc ;
       } ;
     she_Pron = {
       s = table {Nom => "she" ; Acc => "her"} ;
-      a = Agr Sg ;
+      a = NGAgr Sg Femm ;
       } ;
     they_Pron = {
       s = table {Nom => "they" ; Acc => "them"} ;
-      a = Agr Pl ;
+      a = NGAgr Pl Masc ; -- TODO: well not necessarily masc
       } ;
 
 -----------------------------------------------------
@@ -98,7 +98,7 @@ lin already_Adv = mkAdv "já" ;
 lin animal_N = mkN "animal" ;
 lin apple_N = mkN "maçã" ;
 lin baby_N = mkN "bebê" ;
-lin bad_A = mkA "mau" ;
+lin bad_A = mkA "mau" "má" "más" "maus";
 lin beer_N = mkN "cerveja" ;
 lin big_A = mkA "grande" ;
 lin bike_N = mkN "bicicleta" ;
@@ -133,7 +133,7 @@ lin fish_N = mkN "peixe" ;
 lin flower_N = mkN "flor" ;
 lin friend_N = mkN "amigo" ;
 lin girl_N = mkN "menina" ;
-lin good_A = mkA "bom" ;
+lin good_A = mkA "bom" "bons" "boa" "boas" ;
 lin go_V = mkV "ir" ;
 lin grammar_N = mkN "gramática" ;
 lin green_A = mkA "verde" ;
@@ -178,7 +178,7 @@ lin white_A = mkA "branco" ;
 lin wine_N = mkN "vinho" ;
 lin woman_N = mkN "mulher" ;
 lin yellow_A = mkA "amarelo" ;
-lin young_A = mkA "jovem" ;
+lin young_A = mkA "jovem" "jovens" "jovem" "jovens" ;
 
 ---------------------------
 -- Paradigms part ---------
@@ -186,18 +186,24 @@ lin young_A = mkA "jovem" ;
 
 oper
   mkN = overload {
-    mkN : Str -> Noun   -- predictable noun, e.g. livro-livros, cor-cores, questão-questões, lençol-lençóis
+    mkN : Str -> Noun -- predictable noun, e.g. livro-livros, cor-cores, questão-questões, lençol-lençóis
       = \n -> lin N (regNoun n) ;
     mkN : Str -> Gender -> Noun -- regular noun with unpredicable gender, e.g. poeta-poetas
-      = \sg,gn -> lin N (mkNoun sg (nounPlural sg) gn) ;
+      = \sg,gn -> lin N (mkNoun sg (plural sg) gn) ;
     mkN : Str -> Str -> Noun -- irregular noun with predictable gender, e.g. alemão-alemães
       = \sg,pl -> lin N (mkNoun sg pl (nounGender sg)) ;
     mkN : Str -> Str -> Gender -> Noun  -- irregular noun with unpredictable gender, e.g. cinema-cinemas
       = \sg,pl,gn -> lin N (mkNoun sg pl gn) ;
     } ;
 
-  mkA : Str -> A
-    = \s -> lin A {s = s} ;
+  mkA = overload {
+    mkA : Str -> Adjective -- predictable adjective, e.g. velho(s)-velha(s)
+      = \s -> lin A (smartAdjective s) ;
+    mkA : Str -> Str -> Adjective -- adjective with predictable plural but unpredictable gender inflection, e.g. motor-motriz
+      = \m,f -> lin A (mkAdjective m (plural m) f (plural f)) ;
+    mkA : Str -> Str -> Str -> Str -> Adjective -- completely crazy adjective, I can't even think of an example
+      = \msg,mpl,fsg,fpl -> lin A (mkAdjective msg mpl fsg fpl)
+  } ;
 
   mkV = overload {
     mkV : (inf : Str) -> V  -- predictable verb, e.g. play-plays, cry-cries, wash-washes
