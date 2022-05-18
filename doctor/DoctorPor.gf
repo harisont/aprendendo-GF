@@ -17,7 +17,7 @@ lincat
   Person = NP ;
   Place = {at,to : Adv} ;
   Substance = NP ;
-  Illness = NP ;
+  Illness = NP ** { isAcute : Bool } ;
 
 lin
   presPosPhrase fact = mkUtt (mkS fact) ;
@@ -36,8 +36,17 @@ lin
   isProfessionProperty profession = mkVP (mkNP a_Det profession) ;
   needProfessionProperty profession = mkVP need_V2 (mkNP a_Det profession) ;
   isAtPlaceProperty place = mkVP place.at ;
-  haveIllnessProperty illness = mkVP have_V2 illness ;
-
+  haveIllnessProperty illness = let illness_VP = {
+      s = illness.s; 
+      a = illness.a; 
+      hasClit = illness.hasClit; 
+      isNeg = illness.isNeg; 
+      isPol = illness.isPol
+    } in case illness.isAcute of {
+      True => mkVP estar_V2 illness_VP ;
+      False => mkVP have_V2 illness_VP
+  } ;
+  
   theProfessionPerson profession = mkNP the_Det profession ;
 
   iMascPerson = i_NP ;
@@ -85,13 +94,13 @@ lin
   havePainsProperty = mkVP have_V2 (mkNP (mkN "dores")) ; -- tenho dores
   haveChildrenProperty = mkVP have_V2 (mkNP (mkN "filho")) ; -- tenho filhos
 
-  feverIllness = mkNP a_Det (mkN "febre") ; -- estou com febre
-  fluIllness = mkNP a_Det (mkN "gripe") ; -- estou com gripe
-  headacheIllness = mkNP a_Det (mkN "dor de cabeça") ; -- tenho uma dor de cabeça
-  diarrheaIllness = mkNP a_Det (mkN "diarreia") ;
-  heartDiseaseIllness = mkNP a_Det (mkN "doença do coração") ; -- agr
-  lungDiseaseIllness = mkNP a_Det (mkN "doença pulmonar") ; -- agr
-  hypertensionIllness = mkNP (mkN "hipertensão") ;
+  feverIllness = mkNP (mkN "febre") ** { isAcute = True } ;
+  fluIllness = mkNP (mkN "gripe") ** { isAcute = True } ; 
+  headacheIllness = mkNP (mkN "dor de cabeça") ** { isAcute = True } ;
+  diarrheaIllness = mkNP (mkN "diarreia") ** { isAcute = True } ;
+  heartDiseaseIllness = mkNP a_Det (mkN "doença do coração") ** { isAcute = False } ; -- agr
+  lungDiseaseIllness = mkNP a_Det (mkN "doença pulmonar") ** { isAcute = False } ; -- agr
+  hypertensionIllness = mkNP (mkN "hipertensão") ** { isAcute = False };
 
   alcoholSubstance = mkNP (mkN "álcool") ;
   medicineSubstance = mkNP a_Det (mkN "medicamento") ;
@@ -106,5 +115,6 @@ oper
   take_V2 = mkV2 (mkV "tomar") ;
   vaccinate_V2 = mkV2 (mkV "vacinar") ;
   examine_V2 = mkV2 (mkV "examinar") ;
+  estar_V2 = mkV2 (mkV "estar") (mkPrep "com") ;
 
 }
