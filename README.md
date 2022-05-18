@@ -9,4 +9,5 @@ My GF playground, using moslty Portuguese in the hope to learn some of it too.
 - some other things I did _after_ passing the Computational Syntax course:
   - a [tiny tiny application grammar](Music/) for the music domain. The point here was to learn how to make use of the RGL in semantic grammars
   - some [well documented](android/gf_android.md) but frustrating [experiments](android/) using GF in Android apps via the Java bindings
-  - a [Portuguese Micro grammar](comp-syn-lab2-alt2/portuguese/) implemented while TAing in the Computational Syntax course (__ongoing__)
+  - a [Portuguese Micro grammar](micro/portuguese/) implemented while TAing in the Computational Syntax course (__ongoing__)
+  - a [Portuguese Doctor application grammar](doctor/), also implemented while TAing in the Computational Syntax course and also __ongoing__
