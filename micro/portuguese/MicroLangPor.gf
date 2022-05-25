@@ -74,7 +74,7 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
     PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
 
     in_Prep = {s = "in"} ;
-    on_Prep = {s = "on"} ;
+    on_Prep = {s = "on"} ; 
     with_Prep = {s = "with"} ;
 
     he_Pron = {
@@ -206,10 +206,10 @@ oper
   } ;
 
   mkV = overload {
-    mkV : (inf : Str) -> V  -- predictable verb, e.g. play-plays, cry-cries, wash-washes
+    mkV : (inf : Str) -> V  -- predictable verb, e.g. correr
       = \s -> lin V (smartVerb s) ;
-    mkV : (inf,pres,part : Str) -> V  -- irregular verb, e.g. drink-drank-drunk
-      = \inf,pres,part -> lin V (irregVerb inf pres part) ;
+    mkV : (iinf,ppass,pressg1,pressg2,pressg3,prespl1,prespl2,prespl3,impsg2,imppl2 : Str) -> V  -- irregular verb, e.g. ir
+      = \iinf,ppass,pressg1,pressg2,pressg3,prespl1,prespl2,prespl3,impsg2,imppl2 -> lin V (mkVerb iinf ppass pressg1 pressg2 pressg3 prespl1 prespl2 prespl3 impsg2 imppl2) ;
     } ;
 
   mkV2 = overload {

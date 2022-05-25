@@ -9,8 +9,12 @@ param
   NGAgreement = NGAgr Number Gender ; -- used e.g. for noun-adj agreement
   NPAgreement = NPAgr Number Person ; -- used e.g. for verb-subj (pron) agreement
 
-  -- all forms of normal Por verbs, although not yet used in MiniGrammar
-  VForm = Inf | PresSg3 | Past | PastPart | PresPart ; 
+  -- source: https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa#Tempos_e_aspectos
+  VForm = InfImp
+        -- | InfPess -- TODO: infinitivo pessoal
+        | PartPass
+        | IndPres NPAgreement
+        | ImpPres NPAgreement ; -- using the Brazilian "você" rather than the Portuguese "tu", so imperative does not change according to polarity (source: https://www.practiceportuguese.com/learning-notes/the-imperative/)
 
 oper
 
@@ -72,41 +76,72 @@ oper
     _ => let fsg = feminine msg in mkAdjective msg (plural msg) fsg (plural fsg)
   } ;
 
+  -- source: https://www.conjugacao.com.br/
   Verb : Type = {s : VForm => Str} ;
 
-  mkVerb : (inf,pres,past,pastpart,prespart : Str) -> Verb
-    = \inf,pres,past,pastpart,prespart -> {
+  mkVerb : (iinf,ppass,pressg1,pressg2,pressg3,prespl1,prespl2,prespl3,impsg2,imppl2 : Str) -> Verb
+    = \iinf,ppass,pressg1,pressg2,pressg3,prespl1,prespl2,prespl3,impsg2,imppl2 -> {
     s = table {
-      Inf => inf ;
-      PresSg3 => pres ;
-      Past => past ;
-      PastPart => pastpart ;
-      PresPart => prespart
+      InfImp => iinf ;
+      PresPart => ppass ;
+      IndPres (NPAgr Sg I) => pressg1 ;
+      IndPres (NPAgr Sg II) => pressg2 ;
+      IndPres (NPAgr Sg III) => pressg3 ;
+      IndPres (NPAgr Pl I) => prespl1 ;
+      IndPres (NPAgr Pl II) => prespl2 ;
+      IndPres (NPAgr Pl III) => prespl3 ;
+      ImpPres (NPAgr Sg II) => impsg2 ;
+      ImpPres (NPAgr Sg III) => imppl2 ;
+      _ => nonExist
       }
     } ;
 
-  regVerb : (inf : Str) -> Verb = \inf ->
-    mkVerb inf (inf + "s") (inf + "ed") (inf + "ed") (inf + "ing") ;
+  smartVerb : (inf : Str) -> Verb = \inf -> case inf of {
+    encontr + "ar" => conjugAr encontr ;
+    corr + "er" => conjugEr corr ;
+    abr + "ir" => conjugIr abr 
+  } ;
 
-  -- regular verbs with predictable variations
-  smartVerb : Str -> Verb = \inf -> case inf of {
-     pl  +  ("a"|"e"|"i"|"o"|"u") + "y" => regVerb inf ;
-     cr  +  "y" =>  mkVerb inf (cr + "ies") (cr + "ied") (cr + "ied") (inf + "ing") ;
-     lov + "e"  => mkVerb inf (inf + "s") (lov + "ed") (lov + "ed") (lov + "ing") ;
-     kis + ("s"|"sh"|"x"|"o") => mkVerb inf (inf + "es") (inf + "ed") (inf + "ed") (inf + "ing") ;
-     _ => regVerb inf
-     } ;
+   conjugAr : Str -> Verb = \encontr -> mkVerb 
+    (encontr + "ar") 
+    (encontr + "ada")
+    (encontr + "o")
+    (encontr + "as")
+    (encontr + "a")
+    (encontr + "amos")
+    (encontr + "ais")
+    (encontr + "an")
+    (encontr + "e")
+    (encontr + "em") ;
 
-  -- normal irregular verbs e.g. drink,drank,drunk
-  irregVerb : (inf,past,pastpart : Str) -> Verb =
-    \inf,past,pastpart ->
-      let verb = smartVerb inf
-      in mkVerb inf (verb.s ! PresSg3) past pastpart (verb.s ! PresPart) ;   
+   conjugEr : Str -> Verb = \corr -> mkVerb 
+    (corr + "er") 
+    (corr + "ido")
+    (corr + "o")
+    (corr + "es")
+    (corr + "e")
+    (corr + "emos")
+    (corr + "eis")
+    (corr + "em")
+    (corr + "a")
+    (corr + "am") ;
+
+  conjugIr : Str -> Verb = \abr -> mkVerb
+    (abr + "ir") 
+    (abr + "erto")
+    (abr + "o")
+    (abr + "es")
+    (abr + "e")
+    (abr + "imos")
+    (abr + "is")
+    (abr + "em")
+    (abr + "a")
+    (abr + "am") ;
 
   -- two-place verb with "case" as preposition; for transitive verbs, c=[]
   Verb2 : Type = Verb ** {c : Str} ;
 
-  be_Verb : Verb = mkVerb "are" "is" "was" "been" "being" ; ---s to be generalized
+  be_Verb : Verb = mkVerb "ser" "sido" "sou" "és" "é" "somos" "sois" "são" "seja" "sejam" ;
 
 
 ---s a very simplified verb agreement function for Micro
