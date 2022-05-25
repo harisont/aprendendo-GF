@@ -9,8 +9,8 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
     Utt = {s : Str} ;
     
     S  = {s : Str} ;
-    VP = {verb : Verb ; compl : Str} ; ---s special case of Mini
-    Comp = {s : Str} ;
+    VP = {verb : Verb ; compl : NGAgreement => Str} ; ---s special case of Mini
+    Comp = {s : NGAgreement => Str} ;
     AP = Adjective ;
     CN = Noun ;
     NP = {s : Case => Str ; a : NGAgreement} ;
@@ -33,12 +33,12 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
       
     UseV v = {
       verb = v ;
-      compl = [] ;
+      compl = \\_ => [] ;
       } ;
       
     ComplV2 v2 np = {
       verb = v2 ;
-      compl = v2.c ++ np.s ! Acc  -- NP object in the accusative, preposition first
+      compl = \\_ => v2.c ++ np.s ! Acc  -- NP object in the accusative, preposition first
       } ;
       
     UseComp comp = {
@@ -46,10 +46,10 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
       compl = comp.s
       } ;
       
-    -- CompAP ap = ap ;
+    CompAP ap = ap ;
       
     AdvVP vp adv =
-      vp ** {compl = vp.compl ++ adv.s} ;
+      vp ** {compl = \\nga => vp.compl ! nga ++ adv.s} ;
       
     DetCN det cn = {
       s = \\c => det.s ++ cn.s ! det.n ;
@@ -65,9 +65,10 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
     
     UseN n = n ;
     
-    --AdjCN ap cn = {
-    --  s = table {n => ap.s ++ cn.s ! n}
-    --  } ;
+    AdjCN ap cn = {
+      s = \\n => cn.s ! n ++ ap.s ! NGAgr n cn.g ;
+      g = cn.g ;
+      } ;
 
     PositA a = a ;
 
