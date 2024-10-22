@@ -6,90 +6,11 @@ concrete MicroLangPor of MicroLang = open MicroResPor, Prelude in {
 -----------------------------------------------------
 
   lincat
-    Utt = {s : Str} ;
-    
-    S  = {s : Str} ;
-    VP = {verb : Verb ; compl : NGAgreement => Str} ; ---s special case of Mini
-    Comp = {s : NGAgreement => Str} ;
-    AP = Adjective ;
-    CN = Noun ;
-    NP = {s : Case => Str ; a : NGAgreement} ;
-    Pron = {s : Case => Str ; a : NGAgreement} ;
-    Det = {s : Str ; n : Number} ;
-    Prep = {s : Str} ;
     V = Verb ;
     V2 = Verb2 ;
     A = Adjective ;
     N = Noun ;
     Adv = {s : Str} ;
-
-  lin
-    UttS s = s ;
-    UttNP np = {s = np.s ! Acc} ;
-
-    --PredVPS np vp = {
-    --  s = np.s ! Nom ++ vp.verb.s ! agr2vform np.a ++ vp.compl
-    --  } ;
-      
-    UseV v = {
-      verb = v ;
-      compl = \\_ => [] ;
-      } ;
-      
-    ComplV2 v2 np = {
-      verb = v2 ;
-      compl = \\_ => v2.c ++ np.s ! Acc  -- NP object in the accusative, preposition first
-      } ;
-      
-    UseComp comp = {
-      verb = be_Verb ;     -- the verb is the copula "be"
-      compl = comp.s
-      } ;
-      
-    CompAP ap = ap ;
-      
-    AdvVP vp adv =
-      vp ** {compl = \\nga => vp.compl ! nga ++ adv.s} ;
-      
-    DetCN det cn = {
-      s = \\c => det.s ++ cn.s ! det.n ;
-      a = NGAgr det.n cn.g ;
-      } ;
-      
-    UsePron p = p ;
-            
-    a_Det = {s = pre {"a"|"e"|"i"|"o" => "an" ; _ => "a"} ; n = Sg} ; --- a/an can get wrong
-    aPl_Det = {s = "" ; n = Pl} ;
-    the_Det = {s = "the" ; n = Sg} ;
-    thePl_Det = {s = "the" ; n = Pl} ;
-    
-    UseN n = n ;
-    
-    AdjCN ap cn = {
-      s = \\n => cn.s ! n ++ ap.s ! NGAgr n cn.g ;
-      g = cn.g ;
-      } ;
-
-    PositA a = a ;
-
-    PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
-
-    in_Prep = {s = "in"} ;
-    on_Prep = {s = "on"} ; 
-    with_Prep = {s = "with"} ;
-
-    he_Pron = {
-      s = table {Nom => "he" ; Acc => "him"} ;
-      a = NGAgr Sg Masc ;
-      } ;
-    she_Pron = {
-      s = table {Nom => "she" ; Acc => "her"} ;
-      a = NGAgr Sg Femm ;
-      } ;
-    they_Pron = {
-      s = table {Nom => "they" ; Acc => "them"} ;
-      a = NGAgr Pl Masc ; -- TODO: well not necessarily masc
-      } ;
 
 -----------------------------------------------------
 ---------------- Lexicon part -----------------------
@@ -227,7 +148,4 @@ oper
   mkAdv : Str -> Adv
     = \s -> lin Adv {s = s} ;
   
-  mkPrep : Str -> Prep
-    = \s -> lin Prep {s = s} ;
-
 }
